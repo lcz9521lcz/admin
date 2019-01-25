@@ -13,13 +13,16 @@
         <el-input v-model="password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" class="btn">登录</el-button>
+        <el-button type="primary" class="btn" @click="btnLogin">登录</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
+// 导入请求接口
+import { fetch_login } from "@/api";
+
 export default {
   data() {
     return {
@@ -27,6 +30,27 @@ export default {
       username: "",
       password: ""
     };
+  },
+  methods: {
+    btnLogin() {
+      if (!this.username.trim() || !this.password.trim()) {
+        return this.$message({
+          message: "请输入用户名或密码",
+          type: "warning"
+        });
+      }
+      const params = {
+        username: this.username,
+        password: this.password
+      };
+      fetch_login(params).then(result => {
+        console.log(result);
+        if (result.data.meta.status === 200) {
+          // 由于后续所有请求都需要用到token,所以需要将token存储到localStorage中
+          localStorage.setItem("token", result.data.data.token);
+        }
+      });
+    }
   }
 };
 </script>
