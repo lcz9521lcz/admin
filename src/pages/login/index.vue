@@ -48,6 +48,7 @@ export default {
         if (result.data.meta.status === 200) {
           // 由于后续所有请求都需要用到token,所以需要将token存储到localStorage中
           localStorage.setItem("token", result.data.data.token);
+          this.$router.push("/welcome");
         }
       });
     }
